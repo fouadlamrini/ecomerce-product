@@ -107,6 +107,9 @@
             <a href="{{ route('admin.categories.index') }}" class="menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                 <span>🗂️</span><span>Management Category</span>
             </a>
+            <a href="{{ route('admin.subcategories.index') }}" class="menu-link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }}">
+                <span>🧩</span><span>Management Subcategory</span>
+            </a>
             <a href="{{ route('admin.promotions') }}" class="menu-link {{ request()->routeIs('admin.promotions') ? 'active' : '' }}">
                 <span>🏷️</span><span>Discount & Promotion</span>
             </a>
