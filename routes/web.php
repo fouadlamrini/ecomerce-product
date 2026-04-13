@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubcategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,8 +27,8 @@ Route::middleware('auth')->group(function () {
         Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
         Route::view('/analytics', 'admin.analytics')->name('analytics');
         Route::view('/orders', 'admin.orders')->name('orders');
-        Route::view('/products', 'admin.products')->name('products');
         Route::view('/promotions', 'admin.promotions')->name('promotions');
+        Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('subcategories', SubcategoryController::class);
     });

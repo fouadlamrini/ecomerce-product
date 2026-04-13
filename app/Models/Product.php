@@ -17,7 +17,6 @@ class Product extends Model
         'subcategory_id',
         'name',
         'slug',
-        'sku',
         'description',
         'price',
         'compare_price',
@@ -43,7 +42,7 @@ class Product extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(ProductImage::class);
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
     }
 
     public function cartItems(): HasMany

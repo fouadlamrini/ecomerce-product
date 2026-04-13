@@ -123,7 +123,7 @@
             </a>
 
             <div class="menu-title">Product</div>
-            <a href="{{ route('admin.products') }}" class="menu-link {{ request()->routeIs('admin.products') ? 'active' : '' }}">
+            <a href="{{ route('admin.products.index') }}" class="menu-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                 <span>📦</span><span>Management Product</span>
             </a>
             <a href="{{ route('admin.categories.index') }}" class="menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
