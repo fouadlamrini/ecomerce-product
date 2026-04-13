@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('address_id')->nullable();
-            $table->unsignedBigInteger('coupon_id')->nullable();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
+            $table->uuid('address_id')->nullable();
+            $table->uuid('coupon_id')->nullable();
             $table->string('order_number')->unique();
             $table->string('status')->default('pending');
             $table->decimal('subtotal', 12, 2)->default(0);

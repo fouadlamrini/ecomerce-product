@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained()->restrictOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('order_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('product_id')->constrained()->restrictOnDelete();
             $table->unsignedInteger('quantity');
             $table->decimal('unit_price', 12, 2);
             $table->decimal('line_total', 12, 2);

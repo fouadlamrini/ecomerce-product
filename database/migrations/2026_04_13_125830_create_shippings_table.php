@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shippings', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('order_id')->constrained()->cascadeOnDelete();
             $table->string('carrier')->nullable();
             $table->string('tracking_number')->nullable()->unique();
             $table->string('status')->default('pending');
