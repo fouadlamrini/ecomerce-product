@@ -17,7 +17,6 @@ class Product extends Model
         'subcategory_id',
         'name',
         'slug',
-        'sku',
         'description',
         'price',
         'compare_price',
