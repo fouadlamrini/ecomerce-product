@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\Subcategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -83,9 +84,18 @@ class ShopController extends Controller
     public function showProduct(Request $request, Product $product): View
     {
         $product->load(['images', 'category', 'subcategory']);
+        $galleryImages = $product->images
+            ->sortBy('sort_order')
+            ->values()
+            ->map(fn (ProductImage $image) => [
+                'id' => $image->id,
+                'url' => asset('storage/'.$image->path),
+                'alt' => $image->alt_text ?: $product->name,
+            ])->all();
 
         return view('client.products.show', [
             'product' => $product,
+            'galleryImages' => $galleryImages,
             'cartCount' => $this->cartCount($request),
         ]);
     }
