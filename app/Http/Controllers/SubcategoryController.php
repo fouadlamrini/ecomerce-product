@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -34,11 +36,13 @@ class SubcategoryController extends Controller
     public function store(StoreSubcategoryRequest $request): RedirectResponse
     {
         $validated = $request->validated();
+        $bgImagePath = $this->storeBgImage($request->file('bg_image'));
 
         Subcategory::query()->create([
             'category_id' => $validated['category_id'],
             'name' => $validated['name'],
             'slug' => $this->generateUniqueSlug($validated['name']),
+            'bg_image' => $bgImagePath,
             'is_active' => (bool) ($validated['is_active'] ?? false),
         ]);
 
@@ -64,6 +68,14 @@ class SubcategoryController extends Controller
     public function update(UpdateSubcategoryRequest $request, Subcategory $subcategory): RedirectResponse
     {
         $validated = $request->validated();
+        $bgImagePath = $subcategory->bg_image;
+        $newImage = $request->file('bg_image');
+        if ($newImage instanceof UploadedFile) {
+            if ($subcategory->bg_image) {
+                Storage::disk('public')->delete($subcategory->bg_image);
+            }
+            $bgImagePath = $this->storeBgImage($newImage);
+        }
 
         $subcategory->update([
             'category_id' => $validated['category_id'],
@@ -71,6 +83,7 @@ class SubcategoryController extends Controller
             'slug' => $subcategory->name !== $validated['name']
                 ? $this->generateUniqueSlug($validated['name'], $subcategory->id)
                 : $subcategory->slug,
+            'bg_image' => $bgImagePath,
             'is_active' => (bool) ($validated['is_active'] ?? false),
         ]);
 
@@ -81,6 +94,10 @@ class SubcategoryController extends Controller
 
     public function destroy(Subcategory $subcategory): RedirectResponse
     {
+        if ($subcategory->bg_image) {
+            Storage::disk('public')->delete($subcategory->bg_image);
+        }
+
         $subcategory->delete();
 
         return redirect()
@@ -108,5 +125,14 @@ class SubcategoryController extends Controller
             ->where('slug', $slug)
             ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
             ->exists();
+    }
+
+    private function storeBgImage(?UploadedFile $file): ?string
+    {
+        if (! $file instanceof UploadedFile) {
+            return null;
+        }
+
+        return $file->store('subcategory-bg', 'public');
     }
 }

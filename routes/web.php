@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Client\ShopController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubcategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,13 +28,18 @@ Route::middleware('auth')->group(function () {
         Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
         Route::view('/analytics', 'admin.analytics')->name('analytics');
         Route::view('/orders', 'admin.orders')->name('orders');
-        Route::view('/products', 'admin.products')->name('products');
         Route::view('/promotions', 'admin.promotions')->name('promotions');
+        Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('subcategories', SubcategoryController::class);
     });
 
-    Route::get('/client/home', function () {
-        return 'Client home';
-    })->name('client.home');
+    Route::prefix('client')->name('client.')->group(function () {
+        Route::get('/home', [ShopController::class, 'home'])->name('home');
+        Route::get('/categories', [ShopController::class, 'categories'])->name('categories.index');
+        Route::get('/categories/{category}', [ShopController::class, 'showCategory'])->name('categories.show');
+        Route::get('/subcategories/{subcategory}', [ShopController::class, 'showSubcategory'])->name('subcategories.show');
+        Route::get('/products/{product}', [ShopController::class, 'showProduct'])->name('products.show');
+        Route::post('/products/{product}/add-to-cart', [ShopController::class, 'addToCart'])->name('products.add-to-cart');
+    });
 });
