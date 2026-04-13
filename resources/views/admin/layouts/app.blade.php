@@ -64,6 +64,28 @@
             color: var(--active-text);
             font-weight: 700;
         }
+        .logout-wrap {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--line);
+        }
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #f3d1d1;
+            background: #fff5f5;
+            color: #b42318;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .logout-btn:hover {
+            background: #ffecec;
+        }
         .main {
             padding: 24px;
         }
@@ -107,9 +129,22 @@
             <a href="{{ route('admin.categories.index') }}" class="menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                 <span>🗂️</span><span>Management Category</span>
             </a>
+            <a href="{{ route('admin.subcategories.index') }}" class="menu-link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }}">
+                <span>🧩</span><span>Management Subcategory</span>
+            </a>
             <a href="{{ route('admin.promotions') }}" class="menu-link {{ request()->routeIs('admin.promotions') ? 'active' : '' }}">
                 <span>🏷️</span><span>Discount & Promotion</span>
             </a>
+
+            <div class="logout-wrap">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="logout-btn">
+                        <span>↩</span>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
         </aside>
 
         <main class="main">

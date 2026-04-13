@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Management Category')
+@section('title', 'Management Subcategory')
 
 @section('content')
     <style>
@@ -15,7 +15,6 @@
         .icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; text-decoration: none; border: 1px solid #e9e9e9; background: #fff; color: #444; }
         .icon-btn svg { width: 18px; height: 18px; }
         .icon-btn:hover { background: #f9f9f9; }
-        .icon-btn.plus { color: #7a4d00; border-color: #f5e1b8; }
         .icon-btn.edit { color: #1f5fbf; border-color: #cfe0fb; }
         .icon-btn.view { color: #197857; border-color: #cceee1; }
         .icon-btn.delete { color: #b00020; border-color: #f1c5ce; cursor: pointer; }
@@ -24,8 +23,8 @@
     </style>
 
     <div class="top">
-        <h2 style="margin: 0;">Category List</h2>
-        <a href="{{ route('admin.categories.create') }}" class="btn">+ Add Category</a>
+        <h2 style="margin: 0;">Subcategory List</h2>
+        <a href="{{ route('admin.subcategories.create') }}" class="btn">+ Add Subcategory</a>
     </div>
 
     @if (session('success'))
@@ -36,44 +35,40 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Category</th>
                 <th>Slug</th>
                 <th>Status</th>
-                <th style="width: 290px;">Actions</th>
+                <th style="width: 200px;">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($categories as $category)
+            @forelse ($subcategories as $subcategory)
                 <tr>
-                    <td>{{ $category->name }}</td>
-                    <td>{{ $category->slug }}</td>
+                    <td>{{ $subcategory->name }}</td>
+                    <td>{{ $subcategory->category?->name ?? '-' }}</td>
+                    <td>{{ $subcategory->slug }}</td>
                     <td>
-                        <span class="badge {{ $category->is_active ? 'badge-on' : 'badge-off' }}">
-                            {{ $category->is_active ? 'active' : 'inactive' }}
+                        <span class="badge {{ $subcategory->is_active ? 'badge-on' : 'badge-off' }}">
+                            {{ $subcategory->is_active ? 'active' : 'inactive' }}
                         </span>
                     </td>
                     <td class="actions">
-                        <a class="icon-btn plus" title="Add Subcategory" href="{{ route('admin.subcategories.create', ['category_id' => $category->id]) }}" aria-label="Add subcategory">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 5v14"></path>
-                                <path d="M5 12h14"></path>
-                            </svg>
-                        </a>
-                        <a class="icon-btn view" title="View" href="{{ route('admin.categories.show', $category) }}" aria-label="View category">
+                        <a class="icon-btn view" title="View" href="{{ route('admin.subcategories.show', $subcategory) }}" aria-label="View subcategory">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                         </a>
-                        <a class="icon-btn edit" title="Edit" href="{{ route('admin.categories.edit', $category) }}" aria-label="Edit category">
+                        <a class="icon-btn edit" title="Edit" href="{{ route('admin.subcategories.edit', $subcategory) }}" aria-label="Edit subcategory">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
                             </svg>
                         </a>
-                        <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('Delete this category?')">
+                        <form method="POST" action="{{ route('admin.subcategories.destroy', $subcategory) }}" onsubmit="return confirm('Delete this subcategory?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="icon-btn delete" title="Delete" aria-label="Delete category">
+                            <button type="submit" class="icon-btn delete" title="Delete" aria-label="Delete subcategory">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="3 6 5 6 21 6"></polyline>
                                     <path d="M19 6l-1 14H6L5 6"></path>
@@ -86,22 +81,22 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="4">No categories found.</td></tr>
+                <tr><td colspan="5">No subcategories found.</td></tr>
             @endforelse
         </tbody>
     </table>
 
     <div style="margin-top: 16px; display: flex; gap: 10px; align-items: center;">
-        @if ($categories->onFirstPage())
+        @if ($subcategories->onFirstPage())
             <span style="color:#9ca3af;">Previous</span>
         @else
-            <a href="{{ $categories->previousPageUrl() }}" style="text-decoration:none;color:#f16743;">Previous</a>
+            <a href="{{ $subcategories->previousPageUrl() }}" style="text-decoration:none;color:#f16743;">Previous</a>
         @endif
 
-        <span style="color:#6b7280;">Page {{ $categories->currentPage() }} / {{ $categories->lastPage() }}</span>
+        <span style="color:#6b7280;">Page {{ $subcategories->currentPage() }} / {{ $subcategories->lastPage() }}</span>
 
-        @if ($categories->hasMorePages())
-            <a href="{{ $categories->nextPageUrl() }}" style="text-decoration:none;color:#f16743;">Next</a>
+        @if ($subcategories->hasMorePages())
+            <a href="{{ $subcategories->nextPageUrl() }}" style="text-decoration:none;color:#f16743;">Next</a>
         @else
             <span style="color:#9ca3af;">Next</span>
         @endif

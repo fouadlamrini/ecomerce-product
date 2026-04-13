@@ -2,63 +2,111 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Subcategory\StoreSubcategoryRequest;
+use App\Http\Requests\Subcategory\UpdateSubcategoryRequest;
+use App\Models\Category;
+use App\Models\Subcategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class SubcategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        $subcategories = Subcategory::query()
+            ->with('category:id,name')
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.subcategories.index', compact('subcategories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request): View
     {
-        //
+        $categories = Category::query()->orderBy('name')->get(['id', 'name']);
+        $selectedCategoryId = $request->query('category_id');
+
+        return view('admin.subcategories.create', compact('categories', 'selectedCategoryId'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreSubcategoryRequest $request): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+
+        Subcategory::query()->create([
+            'category_id' => $validated['category_id'],
+            'name' => $validated['name'],
+            'slug' => $this->generateUniqueSlug($validated['name']),
+            'is_active' => (bool) ($validated['is_active'] ?? false),
+        ]);
+
+        return redirect()
+            ->route('admin.subcategories.index')
+            ->with('success', 'Subcategory created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Subcategory $subcategory): View
     {
-        //
+        $subcategory->load('category:id,name');
+
+        return view('admin.subcategories.show', compact('subcategory'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Subcategory $subcategory): View
     {
-        //
+        $categories = Category::query()->orderBy('name')->get(['id', 'name']);
+
+        return view('admin.subcategories.edit', compact('subcategory', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateSubcategoryRequest $request, Subcategory $subcategory): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+
+        $subcategory->update([
+            'category_id' => $validated['category_id'],
+            'name' => $validated['name'],
+            'slug' => $subcategory->name !== $validated['name']
+                ? $this->generateUniqueSlug($validated['name'], $subcategory->id)
+                : $subcategory->slug,
+            'is_active' => (bool) ($validated['is_active'] ?? false),
+        ]);
+
+        return redirect()
+            ->route('admin.subcategories.index')
+            ->with('success', 'Subcategory updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Subcategory $subcategory): RedirectResponse
     {
-        //
+        $subcategory->delete();
+
+        return redirect()
+            ->route('admin.subcategories.index')
+            ->with('success', 'Subcategory deleted successfully.');
+    }
+
+    private function generateUniqueSlug(string $name, ?string $ignoreId = null): string
+    {
+        $base = Str::slug($name);
+        $slug = $base;
+        $counter = 1;
+
+        while ($this->slugExists($slug, $ignoreId)) {
+            $slug = $base.'-'.$counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    private function slugExists(string $slug, ?string $ignoreId = null): bool
+    {
+        return Subcategory::query()
+            ->where('slug', $slug)
+            ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
+            ->exists();
     }
 }

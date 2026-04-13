@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubcategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::view('/products', 'admin.products')->name('products');
         Route::view('/promotions', 'admin.promotions')->name('promotions');
         Route::resource('categories', CategoryController::class);
+        Route::resource('subcategories', SubcategoryController::class);
     });
 
     Route::get('/client/home', function () {
