@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubcategoryController;
@@ -41,5 +42,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/subcategories/{subcategory}', [ShopController::class, 'showSubcategory'])->name('subcategories.show');
         Route::get('/products/{product}', [ShopController::class, 'showProduct'])->name('products.show');
         Route::post('/products/{product}/add-to-cart', [ShopController::class, 'addToCart'])->name('products.add-to-cart');
+
+        Route::get('/cart', fn () => redirect()->route('client.categories.index'))->name('cart.index');
+        Route::post('/cart/items/{cartItem}/increment', [CartController::class, 'increment'])->name('cart.items.increment');
+        Route::post('/cart/items/{cartItem}/decrement', [CartController::class, 'decrement'])->name('cart.items.decrement');
+        Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
+        Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
     });
 });

@@ -32,7 +32,6 @@ class ShopController extends Controller
 
         return view('client.categories.index', [
             'categories' => $categories,
-            'cartCount' => $this->cartCount($request),
         ]);
     }
 
@@ -49,7 +48,6 @@ class ShopController extends Controller
             return view('client.subcategories.index', [
                 'category' => $category,
                 'subcategories' => $activeSubcategories,
-                'cartCount' => $this->cartCount($request),
             ]);
         }
 
@@ -62,7 +60,6 @@ class ShopController extends Controller
         return view('client.products.index', [
             'title' => 'Products - '.$category->name,
             'products' => $products,
-            'cartCount' => $this->cartCount($request),
         ]);
     }
 
@@ -77,7 +74,6 @@ class ShopController extends Controller
         return view('client.products.index', [
             'title' => 'Products - '.$subcategory->name,
             'products' => $products,
-            'cartCount' => $this->cartCount($request),
         ]);
     }
 
@@ -96,12 +92,20 @@ class ShopController extends Controller
         return view('client.products.show', [
             'product' => $product,
             'galleryImages' => $galleryImages,
-            'cartCount' => $this->cartCount($request),
         ]);
     }
 
     public function addToCart(Request $request, Product $product): RedirectResponse
     {
+        if (! $product->is_active) {
+            return back()->with('error', 'This product is not available.');
+        }
+
+        $stock = (int) $product->stock;
+        if ($stock < 1) {
+            return back()->with('error', 'This product is out of stock.');
+        }
+
         $user = $request->user();
 
         $cart = Cart::query()->firstOrCreate(
@@ -112,6 +116,9 @@ class ShopController extends Controller
         $item = $cart->items()->where('product_id', $product->id)->first();
 
         if ($item) {
+            if ($item->quantity >= $stock) {
+                return back()->with('error', 'You cannot add more than available stock ('.$stock.').');
+            }
             $item->increment('quantity');
         } else {
             $cart->items()->create([
@@ -122,20 +129,5 @@ class ShopController extends Controller
         }
 
         return back()->with('success', 'Product added to cart.');
-    }
-
-    private function cartCount(Request $request): int
-    {
-        $user = $request->user();
-        if (! $user) {
-            return 0;
-        }
-
-        return Cart::query()
-            ->where('user_id', $user->id)
-            ->where('status', 'active')
-            ->withCount('items')
-            ->first()
-            ?->items_count ?? 0;
     }
 }
