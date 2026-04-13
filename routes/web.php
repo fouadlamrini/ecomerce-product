@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,9 +17,13 @@ Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/admin/home', function () {
-        return 'Admin home';
-    })->name('admin.home');
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/home', function () {
+            return redirect()->route('admin.categories.index');
+        })->name('home');
+
+        Route::resource('categories', CategoryController::class);
+    });
 
     Route::get('/client/home', function () {
         return 'Client home';
