@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Category</title>
+@extends('admin.layouts.app')
+
+@section('title', 'Edit Category')
+
+@section('content')
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f7; }
-        .container { max-width: 760px; margin: 30px auto; background: #fff; border-radius: 12px; padding: 24px; }
+        .container { max-width: 760px; }
         .field { margin-bottom: 14px; }
         label { display: block; margin-bottom: 6px; font-weight: bold; }
         input[type="text"] { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
@@ -14,10 +12,7 @@
         .link { margin-right: 12px; color: #666; text-decoration: none; }
         .error-list { margin-bottom: 12px; padding: 10px; background: #fff1f1; border: 1px solid #ffc8c8; color: #9a1a1a; border-radius: 8px; }
     </style>
-</head>
-<body>
     <div class="container">
-        <h2>Edit Category</h2>
 
         @if ($errors->any())
             <div class="error-list">
@@ -48,5 +43,4 @@
             <button class="btn" type="submit">Update</button>
         </form>
     </div>
-</body>
-</html>
+@endsection
