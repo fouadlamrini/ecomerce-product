@@ -19,9 +19,14 @@ Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/home', function () {
-            return redirect()->route('admin.categories.index');
+            return redirect()->route('admin.dashboard');
         })->name('home');
 
+        Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
+        Route::view('/analytics', 'admin.analytics')->name('analytics');
+        Route::view('/orders', 'admin.orders')->name('orders');
+        Route::view('/products', 'admin.products')->name('products');
+        Route::view('/promotions', 'admin.promotions')->name('promotions');
         Route::resource('categories', CategoryController::class);
     });
 
