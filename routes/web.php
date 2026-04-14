@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Client\AddressController as ClientAddressController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ShopController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SubcategoryController;
@@ -23,6 +24,9 @@ Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::middleware('auth')->group(function () {
+    Route::post('/client/orders/{order}/checkout', [OrderController::class, 'checkout'])->name('orders.checkout');
+    Route::get('/payment/success', [OrderController::class, 'success'])->name('payment.success');
+
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/home', function () {
             return redirect()->route('admin.dashboard');
@@ -54,5 +58,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/cart/items/{cartItem}/decrement', [CartController::class, 'decrement'])->name('cart.items.decrement');
         Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
         Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+        Route::post('/checkout/place-order', [CartController::class, 'placeOrder'])->name('checkout.place-order');
+        Route::get('/orders', [CartController::class, 'orders'])->name('orders.index');
+        Route::get('/orders/{order}', [CartController::class, 'showOrder'])->name('orders.show');
+        Route::get('/orders/{order}/pay', [CartController::class, 'pay'])->name('orders.pay');
+        Route::post('/orders/{order}/payment/confirm', [CartController::class, 'confirmPayment'])->name('orders.payment.confirm');
+        Route::get('/orders/{order}/payment/success', [CartController::class, 'paymentSuccess'])->name('orders.payment.success');
+        Route::get('/orders/{order}/payment/cancel', [CartController::class, 'paymentCancel'])->name('orders.payment.cancel');
     });
 });

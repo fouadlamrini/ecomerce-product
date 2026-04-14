@@ -46,6 +46,7 @@
                             <p class="mt-0.5 text-xs text-slate-500">Account</p>
                         </div>
                         <a href="{{ route('client.profile') }}" class="block rounded-lg px-2.5 py-2 text-left text-[13px] font-semibold text-slate-700 hover:bg-slate-50" role="menuitem">Profile</a>
+                        <a href="{{ route('client.orders.index') }}" class="block rounded-lg px-2.5 py-2 text-left text-[13px] font-semibold text-slate-700 hover:bg-slate-50" role="menuitem">My Orders</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="block w-full rounded-lg px-2.5 py-2 text-left text-[13px] font-semibold text-red-700 hover:bg-slate-50" role="menuitem">Logout</button>

@@ -8,6 +8,10 @@
             <h1 class="m-0 text-3xl font-extrabold">My Profile</h1>
             <p class="m-0 text-sm text-slate-500">Save your shipping addresses once, then reuse them at checkout.</p>
         </div>
+        <a href="{{ route('client.orders.index') }}"
+           class="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50">
+            My Orders
+        </a>
     </div>
 
     <section class="mb-4 rounded-xl border border-slate-200 bg-white p-4.5">
