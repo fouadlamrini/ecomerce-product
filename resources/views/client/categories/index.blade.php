@@ -3,50 +3,42 @@
 @section('title', 'Categories')
 
 @section('content')
-    <style>
-        .title { margin: 0 0 14px; font-size: 28px; font-weight: 800; }
-        .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-        .card {
-            position: relative;
-            min-height: 170px;
-            border-radius: 12px;
-            overflow: hidden;
-            text-decoration: none;
-            color: #fff;
-            border: 1px solid #e5e7eb;
-            background: linear-gradient(135deg, #2563eb, #9333ea);
-            display: flex;
-            align-items: flex-end;
-        }
-        .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-        .overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 20%, rgba(0,0,0,.55) 100%); }
-        .content { position: relative; z-index: 2; padding: 14px; }
-        .name { margin: 0; font-size: 30px; font-weight: 900; line-height: 1; text-transform: capitalize; }
-        .meta { margin-top: 6px; font-size: 13px; opacity: .95; }
-        @media (max-width: 960px) { .grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-    </style>
+    <section class="mb-6">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.12em] text-[#f16743]">Nexus Collections</p>
+        <h1 class="m-0 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">Discover premium categories</h1>
+        <p class="mt-2.5 max-w-[760px] text-[15px] leading-7 text-slate-500">
+            Curated collections with elevated essentials, seasonal drops, and trending picks designed to upgrade your everyday shopping.
+        </p>
+    </section>
 
-    <h1 class="title">Choose Category</h1>
-    <div class="grid">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
         @forelse ($categories as $category)
             @php
                 $cover = $category->bg_image ?: optional($category->products->first()?->images->first())->path;
                 $hasSubs = $category->subcategories->isNotEmpty();
-                $meta = $hasSubs ? $category->subcategories->count().' subcategories' : $category->products->count().' products';
+                $productsCount = $category->products->count();
+                $subCount = $category->subcategories->count();
+                $meta = $hasSubs
+                    ? ($subCount > 0 ? $subCount.' subcategories' : 'Explore collection')
+                    : ($productsCount > 0 ? $productsCount.' products' : 'Explore collection');
+                $featured = $loop->index < 2;
+                $cardBase = 'group relative isolate flex aspect-square items-end overflow-hidden rounded-3xl border border-white/10 text-white shadow-xl transition hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl';
+                $featuredClass = $featured ? 'sm:col-span-2 sm:aspect-[2/1] xl:col-span-2 xl:aspect-[2/1]' : '';
+                $bgFallback = $cover ? '' : 'bg-linear-to-br from-slate-900 to-slate-800';
             @endphp
-            <a href="{{ route('client.categories.show', $category) }}" class="card">
+            <a href="{{ route('client.categories.show', $category) }}" class="{{ $cardBase }} {{ $featuredClass }} {{ $bgFallback }}">
                 @if ($cover)
-                    <img src="{{ asset('storage/'.$cover) }}" alt="{{ $category->name }}">
+                    <img class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-110" src="{{ asset('storage/'.$cover) }}" alt="{{ $category->name }}">
                 @endif
-                <div class="overlay"></div>
-                <div class="content">
-                    <p class="name">{{ $category->name }}</p>
-                    <div class="meta">{{ $meta }}</div>
+                <div class="absolute inset-0 z-1 bg-linear-to-b from-black/10 via-black/20 to-black/60"></div>
+                <div class="pointer-events-none absolute inset-[-120%_-40%] z-2 rotate-12 bg-linear-to-r from-transparent via-white/20 to-transparent transition duration-700 group-hover:translate-x-[78%]"></div>
+                <div class="relative z-3 p-5">
+                    <h2 class="m-0 text-3xl font-extrabold capitalize leading-tight tracking-tight sm:text-4xl">{{ $category->name }}</h2>
+                    <div class="mt-2 text-sm font-medium text-white/90">{{ $meta }}</div>
                 </div>
             </a>
         @empty
-            <p>No categories available.</p>
+            <p class="mt-2.5 text-[15px] text-slate-500">No categories available right now.</p>
         @endforelse
     </div>
 @endsection

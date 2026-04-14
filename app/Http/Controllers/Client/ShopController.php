@@ -105,6 +105,10 @@ class ShopController extends Controller
         if ($stock < 1) {
             return back()->with('error', 'This product is out of stock.');
         }
+        $requestedQty = max(1, (int) $request->input('quantity', 1));
+        if ($requestedQty > $stock) {
+            return back()->with('error', 'You cannot add more than available stock ('.$stock.').');
+        }
 
         $user = $request->user();
 
@@ -116,14 +120,15 @@ class ShopController extends Controller
         $item = $cart->items()->where('product_id', $product->id)->first();
 
         if ($item) {
-            if ($item->quantity >= $stock) {
+            $nextQty = (int) $item->quantity + $requestedQty;
+            if ($nextQty > $stock) {
                 return back()->with('error', 'You cannot add more than available stock ('.$stock.').');
             }
-            $item->increment('quantity');
+            $item->update(['quantity' => $nextQty]);
         } else {
             $cart->items()->create([
                 'product_id' => $product->id,
-                'quantity' => 1,
+                'quantity' => $requestedQty,
                 'unit_price' => $product->price,
             ]);
         }
