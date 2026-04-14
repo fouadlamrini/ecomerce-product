@@ -20,8 +20,8 @@
             <a href="{{ route('admin.analytics') }}" class="mb-1.5 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm {{ request()->routeIs('admin.analytics') ? 'bg-emerald-50 font-bold text-emerald-700' : 'text-slate-800 hover:bg-slate-50' }}">
                 <span>📊</span><span>Analytic</span>
             </a>
-            <a href="{{ route('admin.orders') }}" class="mb-1.5 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm {{ request()->routeIs('admin.orders') ? 'bg-emerald-50 font-bold text-emerald-700' : 'text-slate-800 hover:bg-slate-50' }}">
-                <span>🧾</span><span>Order</span>
+            <a href="{{ route('admin.shippings.index') }}" class="mb-1.5 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm {{ request()->routeIs('admin.shippings.*') ? 'bg-emerald-50 font-bold text-emerald-700' : 'text-slate-800 hover:bg-slate-50' }}">
+                <span>🚚</span><span>Shipping</span>
             </a>
 
             <div class="mb-2 mt-4 px-2 text-xs uppercase tracking-[0.05em] text-slate-500">Product</div>

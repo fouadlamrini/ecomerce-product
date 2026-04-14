@@ -7,6 +7,7 @@ use App\Http\Controllers\Client\AddressController as ClientAddressController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SubcategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('subcategories', SubcategoryController::class);
+        Route::resource('shippings', ShippingController::class);
     });
 
     Route::prefix('client')->name('client.')->group(function () {
