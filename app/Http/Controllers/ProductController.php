@@ -63,18 +63,15 @@ class ProductController extends Controller
             }
 
             $this->storeMainImage($product, $request->file('main_image'));
-            $this->storeSecondaryImages($product, $secondaryFiles->all());
+            $this->storeSecondaryImages($product, $secondaryFiles);
         });
 
-        return redirect()
-            ->route('admin.products.index')
-            ->with('success', 'Product created successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
     public function show(Product $product): View
     {
         $product->load(['category:id,name', 'subcategory:id,name', 'images']);
-
         $galleryImages = $product->images
             ->sortBy('sort_order')
             ->values()
@@ -134,13 +131,11 @@ class ProductController extends Controller
                 $this->replaceMainImage($product, $newMainImage);
             }
 
-            $this->storeSecondaryImages($product, $secondaryFiles->all());
+            $this->storeSecondaryImages($product, $secondaryFiles);
             $this->ensurePrimaryImage($product);
         });
 
-        return redirect()
-            ->route('admin.products.index')
-            ->with('success', 'Product updated successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
     public function destroy(Product $product): RedirectResponse
@@ -197,20 +192,16 @@ class ProductController extends Controller
         ]);
     }
 
-    private function storeSecondaryImages(Product $product, array|UploadedFile|null $secondaryImages): void
+    private function storeSecondaryImages(Product $product, Collection $files): void
     {
-        $images = collect(is_array($secondaryImages) ? $secondaryImages : [$secondaryImages])
-            ->filter(fn ($file) => $file instanceof UploadedFile)
-            ->values();
-
-        if ($images->isEmpty()) {
+        if ($files->isEmpty()) {
             return;
         }
 
         $currentMaxSort = (int) $product->images()->max('sort_order');
 
-        foreach ($images as $index => $imageFile) {
-            $path = $imageFile->store($this->productImageFolder($product), 'public');
+        foreach ($files as $index => $file) {
+            $path = $file->store($this->productImageFolder($product), 'public');
             $product->images()->create([
                 'path' => $path,
                 'alt_text' => $product->name.' secondary image',
@@ -251,7 +242,6 @@ class ProductController extends Controller
         $images = $product->images()
             ->whereIn('id', $removeImageIds)
             ->get();
-
         foreach ($images as $image) {
             Storage::disk('public')->delete($image->path);
             $image->delete();

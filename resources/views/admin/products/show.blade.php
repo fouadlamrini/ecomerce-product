@@ -3,110 +3,28 @@
 @section('title', 'Product Details')
 
 @section('content')
-    <style>
-        .wrap { display: grid; grid-template-columns: 420px 1fr; gap: 24px; }
-        .gallery-main {
-            width: 100%;
-            height: 320px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            background: #f8fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
-        .arrow-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            border: 1px solid #e5e7eb;
-            background: #ffffffd9;
-            width: 34px;
-            height: 34px;
-            border-radius: 999px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-        .arrow-prev { left: 10px; }
-        .arrow-next { right: 10px; }
-        .thumbs {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .thumb {
-            width: 72px;
-            height: 72px;
-            border-radius: 8px;
-            border: 2px solid #e5e7eb;
-            overflow: hidden;
-            cursor: pointer;
-            background: #fff;
-        }
-        .thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .empty {
-            color: #9ca3af;
-            font-size: 14px;
-        }
-        .item { margin-bottom: 12px; }
-        .label { color: #6b7280; font-size: 13px; }
-        .value { font-size: 16px; }
-        .btn { display: inline-block; margin-right: 8px; text-decoration: none; border-radius: 8px; padding: 8px 14px; }
-        .btn-primary { background: #f16743; color: #fff; }
-        .btn-muted { background: #efefef; color: #444; }
-        @media (max-width: 980px) { .wrap { grid-template-columns: 1fr; } }
-    </style>
-
-    <div class="wrap">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[420px_1fr]">
         <div>
-            <div class="gallery-main">
-                <img id="mainImage" src="" alt="{{ $product->name }}" style="display:none;">
-                <div id="emptyState" class="empty">No images available</div>
-                <button id="prevBtn" class="arrow-btn arrow-prev" type="button">&#8592;</button>
-                <button id="nextBtn" class="arrow-btn arrow-next" type="button">&#8594;</button>
+            <div class="relative flex h-[320px] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                <img id="mainImage" src="" alt="{{ $product->name }}" class="hidden h-full w-full object-cover">
+                <div id="emptyState" class="text-sm text-slate-400">No images available</div>
+                <button id="prevBtn" class="absolute left-2.5 top-1/2 inline-flex h-[34px] w-[34px] -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/90 font-bold" type="button">&#8592;</button>
+                <button id="nextBtn" class="absolute right-2.5 top-1/2 inline-flex h-[34px] w-[34px] -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/90 font-bold" type="button">&#8594;</button>
             </div>
-            <div id="thumbs" class="thumbs"></div>
+            <div id="thumbs" class="mt-3 flex flex-wrap gap-2"></div>
         </div>
 
         <div>
-            <div class="item">
-                <div class="label">Name</div>
-                <div class="value">{{ $product->name }}</div>
-            </div>
-            <div class="item">
-                <div class="label">Category</div>
-                <div class="value">{{ $product->category?->name ?? '-' }}</div>
-            </div>
-            <div class="item">
-                <div class="label">Subcategory</div>
-                <div class="value">{{ $product->subcategory?->name ?? '-' }}</div>
-            </div>
-            <div class="item">
-                <div class="label">Price</div>
-                <div class="value">{{ number_format((float) $product->price, 2) }}</div>
-            </div>
-            <div class="item">
-                <div class="label">Stock</div>
-                <div class="value">{{ $product->stock }}</div>
-            </div>
-            <div class="item">
-                <div class="label">Status</div>
-                <div class="value">{{ $product->is_active ? 'active' : 'inactive' }}</div>
-            </div>
-            <div class="item">
-                <div class="label">Description</div>
-                <div class="value">{{ $product->description ?: '-' }}</div>
-            </div>
+            <div class="mb-3"><div class="text-xs text-slate-500">Name</div><div class="text-base">{{ $product->name }}</div></div>
+            <div class="mb-3"><div class="text-xs text-slate-500">Category</div><div class="text-base">{{ $product->category?->name ?? '-' }}</div></div>
+            <div class="mb-3"><div class="text-xs text-slate-500">Subcategory</div><div class="text-base">{{ $product->subcategory?->name ?? '-' }}</div></div>
+            <div class="mb-3"><div class="text-xs text-slate-500">Price</div><div class="text-base">{{ number_format((float) $product->price, 2) }}</div></div>
+            <div class="mb-3"><div class="text-xs text-slate-500">Stock</div><div class="text-base">{{ $product->stock }}</div></div>
+            <div class="mb-3"><div class="text-xs text-slate-500">Status</div><div class="text-base">{{ $product->is_active ? 'active' : 'inactive' }}</div></div>
+            <div class="mb-4"><div class="text-xs text-slate-500">Description</div><div class="text-base">{{ $product->description ?: '-' }}</div></div>
 
-            <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-primary">Edit</a>
-            <a href="{{ route('admin.products.index') }}" class="btn btn-muted">Back</a>
+            <a href="{{ route('admin.products.edit', $product) }}" class="mr-2 inline-block rounded-lg bg-[#f16743] px-3.5 py-2 text-sm font-bold text-white">Edit</a>
+            <a href="{{ route('admin.products.index') }}" class="inline-block rounded-lg bg-slate-100 px-3.5 py-2 text-sm text-slate-700">Back</a>
         </div>
     </div>
 
@@ -142,24 +60,24 @@
             thumbs.innerHTML = '';
 
             if (!images.length) {
-                mainImage.style.display = 'none';
-                emptyState.style.display = 'block';
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
+                mainImage.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.add('hidden');
                 return;
             }
 
             mainImage.src = images[0].url;
             mainImage.alt = images[0].alt || 'main image';
-            mainImage.style.display = 'block';
-            emptyState.style.display = 'none';
-            prevBtn.style.display = images.length > 1 ? 'inline-flex' : 'none';
-            nextBtn.style.display = images.length > 1 ? 'inline-flex' : 'none';
+            mainImage.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            prevBtn.classList.toggle('hidden', images.length <= 1);
+            nextBtn.classList.toggle('hidden', images.length <= 1);
 
             images.forEach((image, index) => {
                 const thumb = document.createElement('button');
                 thumb.type = 'button';
-                thumb.className = 'thumb';
+                thumb.className = 'h-[72px] w-[72px] overflow-hidden rounded-lg border-2 border-slate-200 bg-white';
                 thumb.title = 'Image ' + (index + 1);
                 thumb.innerHTML = '<img src="' + image.url + '" alt="' + (image.alt || 'thumbnail') + '">';
                 thumb.addEventListener('mouseenter', () => swapToMain(index));

@@ -16,6 +16,7 @@ class Subcategory extends Model
         'category_id',
         'name',
         'slug',
+        'bg_image',
         'description',
         'is_active',
     ];

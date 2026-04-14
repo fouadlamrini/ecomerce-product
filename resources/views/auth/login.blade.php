@@ -4,46 +4,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
-    <style>
-        body { font-family: Inter, Arial, sans-serif; background: #f4f4f4; }
-        .auth-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
-        .auth-card { width: min(1080px, 100%); min-height: 620px; display: grid; grid-template-columns: 1fr 1fr; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); }
-        .auth-left { padding: 64px; display: flex; align-items: center; justify-content: center; }
-        .auth-form-wrap { width: 100%; max-width: 390px; }
-        .logo-text { color: #f16743; font-weight: 700; font-size: 30px; margin-bottom: 12px; }
-        .muted { color: #9b9b9b; font-size: 13px; margin-bottom: 10px; }
-        .title { font-size: 46px; line-height: 1; font-weight: 800; color: #111; margin-bottom: 28px; }
-        .input { width: 100%; border: 1px solid #f0e9e8; background: #fff7f6; border-radius: 8px; padding: 12px 14px; font-size: 14px; margin-bottom: 12px; }
-        .btn { border: 0; background: #f16743; color: #fff; border-radius: 999px; padding: 12px 28px; font-weight: 700; cursor: pointer; transition: .2s ease; }
-        .btn:hover { background: #e85a35; }
-        .auth-right { background: #faece4; display: flex; align-items: center; justify-content: center; }
-        .auth-right img { width: 86%; max-width: 460px; }
-        .error-list { margin-bottom: 16px; border-radius: 10px; background: #fff1f1; border: 1px solid #ffc8c8; padding: 10px 12px; color: #9a1a1a; font-size: 13px; }
-        .success-box { margin-bottom: 16px; border-radius: 10px; background: #effff3; border: 1px solid #b6efc1; padding: 10px 12px; color: #176029; font-size: 13px; }
-        .meta-link { margin-top: 14px; font-size: 13px; color: #666; }
-        .meta-link a { color: #f16743; font-weight: 700; text-decoration: none; }
-        @media (max-width: 900px) { .auth-card { grid-template-columns: 1fr; } .auth-right { min-height: 260px; } }
-    </style>
 </head>
-<body>
-    <section class="auth-shell">
-        <div class="auth-card">
-            <div class="auth-left">
-                <div class="auth-form-wrap">
-                    <p class="logo-text">Logo Here</p>
-                    <p class="muted">Welcome back !!!</p>
-                    <h1 class="title">Sign in</h1>
+<body class="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_12%_18%,rgba(255,127,80,0.42),transparent_44%),radial-gradient(circle_at_84%_16%,rgba(214,223,255,0.92),transparent_42%),radial-gradient(circle_at_70%_82%,rgba(255,191,170,0.55),transparent_38%),linear-gradient(155deg,#f6f7ff_0%,#f9f2ff_55%,#eef3ff_100%)] font-['Geist','Inter',Arial,sans-serif] text-slate-800">
+    <div class="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.24)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.24)_1px,transparent_1px)] bg-size-[48px_48px] mask-[radial-gradient(circle_at_center,black_35%,transparent_88%)]"></div>
+    <div class="pointer-events-none fixed inset-0 before:absolute before:-right-[120px] before:-top-20 before:h-[520px] before:w-[520px] before:rounded-full before:bg-[radial-gradient(circle,rgba(255,127,80,0.28),transparent_68%)] after:absolute after:-bottom-[120px] after:-left-[120px] after:h-[440px] after:w-[440px] after:rounded-full after:bg-[radial-gradient(circle,rgba(180,198,255,0.4),transparent_66%)]"></div>
 
-                    @if (session('success'))
-                        <div class="success-box">{{ session('success') }}</div>
-                    @endif
+    @if (session('success'))
+        <div id="loginToast" class="fixed right-5 top-5 z-20 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-3 text-[13px] text-emerald-800 shadow-lg transition">{{ session('success') }}</div>
+    @endif
+
+    <section class="relative z-10 flex min-h-screen items-center justify-center p-7">
+        <div class="grid min-h-[640px] w-full max-w-[1080px] overflow-hidden rounded-[28px] border border-white/30 bg-white/70 shadow-2xl backdrop-blur-xl lg:grid-cols-2">
+            <div class="flex items-center justify-center p-8 lg:p-16">
+                <div class="w-full max-w-[410px]">
+                    <p class="mb-3 text-3xl font-extrabold tracking-tight text-[#f16743]">Nexus</p>
+                    <p class="mb-2.5 text-sm text-slate-500">Welcome back</p>
+                    <h1 class="mb-7 text-5xl font-extrabold tracking-tight text-slate-900">Sign in</h1>
 
                     @if ($errors->any())
-                        <div class="error-list">
-                            <ul>
+                        <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-[13px] text-red-800">
+                            <ul class="list-disc pl-4">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
@@ -53,19 +39,38 @@
 
                     <form method="POST" action="{{ route('login.store') }}">
                         @csrf
-                        <input class="input" type="email" name="email" value="{{ old('email') }}" placeholder="Email" required>
-                        <input class="input" type="password" name="password" placeholder="Password" required>
-                        <button class="btn" type="submit">SIGN IN</button>
+                        <div class="mb-3.5">
+                            <label class="mb-1.5 block text-xs font-bold text-slate-500" for="email">Email</label>
+                            <input id="email" class="w-full rounded-xl border border-slate-200 bg-white/90 px-3.5 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-[#ff7f50] focus:ring-4 focus:ring-[#ff7f50]/20" type="email" name="email" value="{{ old('email') }}" placeholder="you@example.com" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="mb-1.5 block text-xs font-bold text-slate-500" for="password">Password</label>
+                            <input id="password" class="w-full rounded-xl border border-slate-200 bg-white/90 px-3.5 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-[#ff7f50] focus:ring-4 focus:ring-[#ff7f50]/20" type="password" name="password" placeholder="••••••••" required>
+                        </div>
+                        <button class="w-full rounded-2xl bg-linear-to-b from-[#ff996f] via-[#ff7f50] to-[#f16743] px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-[#f16743]/30 transition hover:scale-[1.01]" type="submit">Sign In</button>
                     </form>
 
-                    <p class="meta-link">I don't have an account ? <a href="{{ route('register') }}">Sign up</a></p>
+                    <p class="mt-4 text-[13px] text-slate-600">I don't have an account? <a class="font-bold text-[#f16743]" href="{{ route('register') }}">Sign up</a></p>
                 </div>
             </div>
 
-            <div class="auth-right">
-                <img src="{{ asset('images/bg.png') }}" alt="Ecommerce login illustration">
+            <div class="relative hidden items-center justify-center bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.45),transparent_38%),linear-gradient(140deg,rgba(255,127,80,0.16),rgba(232,238,255,0.6))] lg:flex">
+                <div class="pointer-events-none absolute inset-6 rounded-[18px] border border-dashed border-white/40"></div>
+                <img class="relative z-10 w-[86%] max-w-[470px]" src="{{ asset('images/bg.png') }}" alt="Ecommerce login illustration">
             </div>
         </div>
     </section>
+    <script>
+        (function () {
+            var toast = document.getElementById('loginToast');
+            if (!toast) return;
+            setTimeout(function () {
+                toast.classList.add('opacity-0', '-translate-y-2');
+            }, 3600);
+            setTimeout(function () {
+                toast.remove();
+            }, 4100);
+        })();
+    </script>
 </body>
 </html>

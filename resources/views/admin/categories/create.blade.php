@@ -7,7 +7,7 @@
         .container { max-width: 760px; }
         .field { margin-bottom: 14px; }
         label { display: block; margin-bottom: 6px; font-weight: bold; }
-        input[type="text"] { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
+        input[type="text"], input[type="file"] { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
         .btn { background: #f16743; color: #fff; border: 0; border-radius: 8px; padding: 9px 16px; cursor: pointer; }
         .link { margin-right: 12px; color: #666; text-decoration: none; }
         .error-list { margin-bottom: 12px; padding: 10px; background: #fff1f1; border: 1px solid #ffc8c8; color: #9a1a1a; border-radius: 8px; }
@@ -24,11 +24,16 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('admin.categories.store') }}">
+        <form method="POST" action="{{ route('admin.categories.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="field">
                 <label for="name">Name</label>
                 <input id="name" type="text" name="name" value="{{ old('name') }}" required>
+            </div>
+
+            <div class="field">
+                <label for="bg_image">Background Image</label>
+                <input id="bg_image" type="file" name="bg_image" accept=".jpg,.jpeg,.png,.webp">
             </div>
 
             <div class="field">
