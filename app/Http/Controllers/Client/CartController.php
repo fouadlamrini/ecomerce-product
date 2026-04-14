@@ -7,11 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\StripeCheckoutService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -171,7 +173,7 @@ class CartController extends Controller
                 'discount_amount' => 0,
                 'shipping_amount' => 0,
                 'total' => $subtotal,
-                'payment_status' => 'unpaid',
+                'payment_status' => 'UNPAID',
             ]);
 
             foreach ($items as $item) {
@@ -200,13 +202,117 @@ class CartController extends Controller
 
     public function showOrder(Request $request, Order $order): View
     {
-        if ($order->user_id !== $request->user()->id) {
-            abort(403);
-        }
+        $this->ensureOwnedOrder($request, $order);
 
         $order->load(['items.product.images', 'address']);
 
         return view('client.orders.show', [
+            'order' => $order,
+        ]);
+    }
+
+    public function orders(Request $request): View
+    {
+        $orders = $request->user()
+            ->orders()
+            ->latest()
+            ->paginate(12);
+
+        return view('client.orders.index', [
+            'orders' => $orders,
+        ]);
+    }
+
+    public function pay(Request $request, Order $order, StripeCheckoutService $stripeCheckout): View|RedirectResponse
+    {
+        $this->ensureOwnedOrder($request, $order);
+
+        if (strtolower((string) $order->payment_status) === 'paid') {
+            return redirect()
+                ->route('client.orders.show', $order)
+                ->with('success', 'This order is already paid.');
+        }
+
+        $order->loadMissing(['items.product', 'user']);
+
+        try {
+            $paymentIntent = $stripeCheckout->createPaymentIntent($order);
+        } catch (RuntimeException $exception) {
+            return redirect()
+                ->route('client.orders.show', $order)
+                ->with('error', $exception->getMessage());
+        }
+
+        $stripePublishableKey = (string) config('services.stripe.key', '');
+        if ($stripePublishableKey === '') {
+            return redirect()
+                ->route('client.orders.show', $order)
+                ->with('error', 'Stripe publishable key is not configured.');
+        }
+
+        return view('client.orders.payment', [
+            'order' => $order,
+            'stripePublishableKey' => $stripePublishableKey,
+            'paymentIntentClientSecret' => $paymentIntent->client_secret,
+        ]);
+    }
+
+    public function confirmPayment(Request $request, Order $order, StripeCheckoutService $stripeCheckout): JsonResponse
+    {
+        $this->ensureOwnedOrder($request, $order);
+
+        if (strtolower((string) $order->payment_status) === 'paid') {
+            return response()->json([
+                'ok' => true,
+                'redirect_url' => route('client.orders.payment.success', $order),
+            ]);
+        }
+
+        $validated = $request->validate([
+            'payment_intent_id' => ['required', 'string', 'max:255'],
+        ]);
+
+        try {
+            $paymentIntent = $stripeCheckout->retrievePaymentIntent($validated['payment_intent_id']);
+        } catch (RuntimeException $exception) {
+            return response()->json(['ok' => false, 'message' => $exception->getMessage()], 422);
+        }
+
+        $metadataOrderId = (string) data_get($paymentIntent, 'metadata.order_id', '');
+        if ($metadataOrderId !== (string) $order->id) {
+            return response()->json(['ok' => false, 'message' => 'Payment does not belong to this order.'], 403);
+        }
+
+        if ((string) $paymentIntent->status !== 'succeeded') {
+            return response()->json(['ok' => false, 'message' => 'Payment has not been completed yet.'], 422);
+        }
+
+        $order->payment_status = 'paid';
+        if ($order->status === 'pending') {
+            $order->status = 'processing';
+        }
+        $order->save();
+
+        return response()->json([
+            'ok' => true,
+            'redirect_url' => route('client.orders.payment.success', $order),
+        ]);
+    }
+
+    public function paymentSuccess(Request $request, Order $order): View
+    {
+        $this->ensureOwnedOrder($request, $order);
+
+        return view('client.orders.payment-success', [
+            'order' => $order->fresh(),
+        ]);
+    }
+
+    public function paymentCancel(Request $request, Order $order): View
+    {
+        $this->ensureOwnedOrder($request, $order);
+
+        return view('client.orders.payment-cancel', [
             'order' => $order,
         ]);
     }
@@ -268,5 +374,12 @@ class CartController extends Controller
         } while (Order::query()->where('order_number', $orderNumber)->exists());
 
         return $orderNumber;
+    }
+
+    private function ensureOwnedOrder(Request $request, Order $order): void
+    {
+        if ($order->user_id !== $request->user()->id) {
+            abort(403);
+        }
     }
 }

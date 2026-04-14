@@ -1,13 +1,22 @@
 @extends('client.layouts.app')
 
-@section('title', 'Order Confirmation')
-
+@section('title', 'Order Confirmation 2')
 @section('content')
-    <h1 class="mb-2 text-[26px] font-extrabold">Order Confirmation</h1>
+    @php
+        $paymentStatus = strtoupper(trim((string) $order->payment_status));
+        $canPayNow = strtolower(trim((string) $order->payment_status)) !== 'paid';
+    @endphp
+
+    <h1 class="mb-2 text-[26px] font-extrabold">Order Confirmation </h1>
 
     @if (session('success'))
         <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
             {{ session('success') }}
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800">
+            {{ session('error') }}
         </div>
     @endif
 
@@ -17,7 +26,14 @@
             <div class="grid grid-cols-1 gap-3 text-sm text-slate-700 sm:grid-cols-2">
                 <div><span class="font-semibold">Order number:</span> {{ $order->order_number }}</div>
                 <div><span class="font-semibold">Order status:</span> {{ $order->status }}</div>
-                <div><span class="font-semibold">Payment status:</span> {{ $order->payment_status }}</div>
+                <div>
+                    <span class="font-semibold">Payment status:</span>
+                    @if ($paymentStatus === 'PAID')
+                        <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">Paid</span>
+                    @else
+                        <span class="uppercase">{{ $paymentStatus }}</span>
+                    @endif
+                </div>
                 <div><span class="font-semibold">Placed at:</span> {{ $order->created_at?->format('Y-m-d H:i') }}</div>
             </div>
 
@@ -47,6 +63,17 @@
                 <span>Total</span>
                 <span>{{ number_format((float) $order->total, 2) }}</span>
             </div>
+
+            @if ($canPayNow)
+                <form method="POST" action="{{ route('orders.checkout', $order) }}" class="mt-4">
+                    @csrf
+                    <button type="submit"
+                            class="w-full rounded-lg border border-indigo-700 bg-indigo-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600"
+                            style="display:block;width:100%;background-color:#4338ca;color:#ffffff;border:1px solid #3730a3;border-radius:0.5rem;padding:0.7rem 1rem;font-weight:600;">
+                        Buy Now
+                    </button>
+                </form>
+            @endif
 
             <a class="mt-4 inline-block text-sm font-bold text-[#f16743]" href="{{ route('client.categories.index') }}">&larr; Continue shopping</a>
         </div>
