@@ -357,6 +357,7 @@
             <a href="{{ route('client.categories.index') }}" class="brand">Vendora Shop</a>
             <div class="nav">
                 <a href="{{ route('client.categories.index') }}">Categories</a>
+                <a href="{{ route('client.profile') }}">Profile</a>
                 <button type="button" class="cart-wrap" id="cartDrawerOpen" title="{{ __('Cart') }} ({{ $cartCount }})" aria-label="{{ __('Open shopping cart') }}" aria-expanded="false" aria-controls="cartDrawer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M6 6h15l-1.5 9h-12z" />

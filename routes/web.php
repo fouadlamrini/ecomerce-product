@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Client\AddressController as ClientAddressController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\ProductController;
@@ -37,6 +38,9 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('client')->name('client.')->group(function () {
         Route::get('/home', [ShopController::class, 'home'])->name('home');
+        Route::get('/profile', [ClientAddressController::class, 'index'])->name('profile');
+        Route::post('/addresses', [ClientAddressController::class, 'store'])->name('addresses.store');
+        Route::patch('/addresses/{address}', [ClientAddressController::class, 'update'])->name('addresses.update');
         Route::get('/categories', [ShopController::class, 'categories'])->name('categories.index');
         Route::get('/categories/{category}', [ShopController::class, 'showCategory'])->name('categories.show');
         Route::get('/subcategories/{subcategory}', [ShopController::class, 'showSubcategory'])->name('subcategories.show');

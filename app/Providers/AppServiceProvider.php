@@ -27,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
             'client.products.index',
             'client.products.show',
             'client.checkout.show',
+            'client.profile.index',
         ], ClientShopComposer::class);
     }
 }

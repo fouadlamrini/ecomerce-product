@@ -94,10 +94,16 @@ class CartController extends Controller
         }
 
         $subtotal = $items->sum(fn (CartItem $item): float => $item->quantity * (float) $item->unit_price);
+        $addresses = $request->user()
+            ->addresses()
+            ->orderByDesc('is_default')
+            ->latest()
+            ->get();
 
         return view('client.checkout.show', [
             'items' => $items,
             'subtotal' => $subtotal,
+            'addresses' => $addresses,
         ]);
     }
 
