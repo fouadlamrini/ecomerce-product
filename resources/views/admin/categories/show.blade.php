@@ -3,33 +3,24 @@
 @section('title', 'Category Details')
 
 @section('content')
-    <style>
-        .container { max-width: 760px; }
-        .item { margin-bottom: 12px; }
-        .label { color: #666; font-size: 13px; }
-        .value { font-size: 16px; }
-        .btn { display: inline-block; margin-right: 8px; text-decoration: none; border-radius: 8px; padding: 8px 14px; }
-        .btn-primary { background: #f16743; color: #fff; }
-        .btn-muted { background: #efefef; color: #444; }
-    </style>
-    <div class="container">
+    <div class="max-w-[760px]">
 
-        <div class="item">
-            <div class="label">Name</div>
-            <div class="value">{{ $category->name }}</div>
+        <div class="mb-3">
+            <div class="text-xs text-slate-500">Name</div>
+            <div class="text-base">{{ $category->name }}</div>
         </div>
 
-        <div class="item">
-            <div class="label">Slug</div>
-            <div class="value">{{ $category->slug }}</div>
+        <div class="mb-3">
+            <div class="text-xs text-slate-500">Slug</div>
+            <div class="text-base">{{ $category->slug }}</div>
         </div>
 
-        <div class="item">
-            <div class="label">Status</div>
-            <div class="value">{{ $category->is_active ? 'active' : 'inactive' }}</div>
+        <div class="mb-4">
+            <div class="text-xs text-slate-500">Status</div>
+            <div class="text-base">{{ $category->is_active ? 'active' : 'inactive' }}</div>
         </div>
 
-        <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-primary">Edit</a>
-        <a href="{{ route('admin.categories.index') }}" class="btn btn-muted">Back</a>
+        <a href="{{ route('admin.categories.edit', $category) }}" class="mr-2 inline-block rounded-lg bg-[#f16743] px-3.5 py-2 text-sm font-bold text-white">Edit</a>
+        <a href="{{ route('admin.categories.index') }}" class="inline-block rounded-lg bg-slate-100 px-3.5 py-2 text-sm text-slate-700">Back</a>
     </div>
 @endsection

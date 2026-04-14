@@ -3,69 +3,51 @@
 @section('title', 'Management Category')
 
 @section('content')
-    <style>
-        .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn { display: inline-block; background: #f16743; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 8px; border: 0; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
-        .badge { padding: 3px 8px; border-radius: 999px; font-size: 12px; }
-        .badge-on { background: #e7f8ec; color: #17733a; }
-        .badge-off { background: #ffe9e9; color: #9f1d1d; }
-        .actions { display: flex; gap: 8px; align-items: center; }
-        .icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; text-decoration: none; border: 1px solid #e9e9e9; background: #fff; color: #444; }
-        .icon-btn svg { width: 18px; height: 18px; }
-        .icon-btn:hover { background: #f9f9f9; }
-        .icon-btn.plus { color: #7a4d00; border-color: #f5e1b8; }
-        .icon-btn.edit { color: #1f5fbf; border-color: #cfe0fb; }
-        .icon-btn.view { color: #197857; border-color: #cceee1; }
-        .icon-btn.delete { color: #b00020; border-color: #f1c5ce; cursor: pointer; }
-        .icon-btn.delete:hover { background: #fff4f6; }
-        .success { margin-bottom: 12px; padding: 10px; background: #effff3; border: 1px solid #b6efc1; color: #176029; border-radius: 8px; }
-    </style>
-
-    <div class="top">
-        <h2 style="margin: 0;">Category List</h2>
-        <a href="{{ route('admin.categories.create') }}" class="btn">+ Add Category</a>
+    <div class="mb-5 flex items-center justify-between gap-3">
+        <h2 class="m-0 text-xl font-bold">Category List</h2>
+        <a href="{{ route('admin.categories.create') }}" class="rounded-lg bg-[#f16743] px-3.5 py-2 text-sm font-bold text-white">+ Add Category</a>
     </div>
 
     @if (session('success'))
-        <div class="success">{{ session('success') }}</div>
+        <div class="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800">{{ session('success') }}</div>
     @endif
 
-    <table>
-        <thead>
+    <div class="overflow-x-auto">
+    <table class="w-full border-collapse">
+        <thead class="text-left">
             <tr>
-                <th>Name</th>
-                <th>Slug</th>
-                <th>Status</th>
-                <th style="width: 290px;">Actions</th>
+                <th class="border-b border-slate-200 px-2 py-2.5">Name</th>
+                <th class="border-b border-slate-200 px-2 py-2.5">Slug</th>
+                <th class="border-b border-slate-200 px-2 py-2.5">Status</th>
+                <th class="w-[290px] border-b border-slate-200 px-2 py-2.5">Actions</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($categories as $category)
                 <tr>
-                    <td>{{ $category->name }}</td>
-                    <td>{{ $category->slug }}</td>
-                    <td>
-                        <span class="badge {{ $category->is_active ? 'badge-on' : 'badge-off' }}">
+                    <td class="border-b border-slate-100 px-2 py-2.5">{{ $category->name }}</td>
+                    <td class="border-b border-slate-100 px-2 py-2.5">{{ $category->slug }}</td>
+                    <td class="border-b border-slate-100 px-2 py-2.5">
+                        <span class="rounded-full px-2 py-0.5 text-xs {{ $category->is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700' }}">
                             {{ $category->is_active ? 'active' : 'inactive' }}
                         </span>
                     </td>
-                    <td class="actions">
-                        <a class="icon-btn plus" title="Add Subcategory" href="{{ route('admin.subcategories.create', ['category_id' => $category->id]) }}" aria-label="Add subcategory">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <td class="border-b border-slate-100 px-2 py-2.5">
+                        <div class="flex items-center gap-2">
+                        <a class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-amber-200 bg-white text-amber-700" title="Add Subcategory" href="{{ route('admin.subcategories.create', ['category_id' => $category->id]) }}" aria-label="Add subcategory">
+                            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14"></path>
                                 <path d="M5 12h14"></path>
                             </svg>
                         </a>
-                        <a class="icon-btn view" title="View" href="{{ route('admin.categories.show', $category) }}" aria-label="View category">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <a class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-emerald-200 bg-white text-emerald-700" title="View" href="{{ route('admin.categories.show', $category) }}" aria-label="View category">
+                            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                         </a>
-                        <a class="icon-btn edit" title="Edit" href="{{ route('admin.categories.edit', $category) }}" aria-label="Edit category">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <a class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-blue-200 bg-white text-blue-700" title="Edit" href="{{ route('admin.categories.edit', $category) }}" aria-label="Edit category">
+                            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
                             </svg>
@@ -73,8 +55,8 @@
                         <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('Delete this category?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="icon-btn delete" title="Delete" aria-label="Delete category">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <button type="submit" class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-red-200 bg-white text-red-700" title="Delete" aria-label="Delete category">
+                                <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="3 6 5 6 21 6"></polyline>
                                     <path d="M19 6l-1 14H6L5 6"></path>
                                     <path d="M10 11v6"></path>
@@ -83,27 +65,29 @@
                                 </svg>
                             </button>
                         </form>
+                        </div>
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="4">No categories found.</td></tr>
+                <tr><td class="px-2 py-3 text-slate-500" colspan="4">No categories found.</td></tr>
             @endforelse
         </tbody>
     </table>
+    </div>
 
-    <div style="margin-top: 16px; display: flex; gap: 10px; align-items: center;">
+    <div class="mt-4 flex items-center gap-2.5 text-sm">
         @if ($categories->onFirstPage())
-            <span style="color:#9ca3af;">Previous</span>
+            <span class="text-slate-400">Previous</span>
         @else
-            <a href="{{ $categories->previousPageUrl() }}" style="text-decoration:none;color:#f16743;">Previous</a>
+            <a href="{{ $categories->previousPageUrl() }}" class="font-bold text-[#f16743]">Previous</a>
         @endif
 
-        <span style="color:#6b7280;">Page {{ $categories->currentPage() }} / {{ $categories->lastPage() }}</span>
+        <span class="text-slate-500">Page {{ $categories->currentPage() }} / {{ $categories->lastPage() }}</span>
 
         @if ($categories->hasMorePages())
-            <a href="{{ $categories->nextPageUrl() }}" style="text-decoration:none;color:#f16743;">Next</a>
+            <a href="{{ $categories->nextPageUrl() }}" class="font-bold text-[#f16743]">Next</a>
         @else
-            <span style="color:#9ca3af;">Next</span>
+            <span class="text-slate-400">Next</span>
         @endif
     </div>
 @endsection
