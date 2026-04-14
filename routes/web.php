@@ -52,5 +52,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/cart/items/{cartItem}/decrement', [CartController::class, 'decrement'])->name('cart.items.decrement');
         Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
         Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+        Route::post('/checkout/place-order', [CartController::class, 'placeOrder'])->name('checkout.place-order');
+        Route::get('/orders/{order}', [CartController::class, 'showOrder'])->name('orders.show');
     });
 });
