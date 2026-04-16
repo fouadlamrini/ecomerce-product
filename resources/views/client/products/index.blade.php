@@ -17,6 +17,7 @@
                 @php
                     $mainImage = $product->images->firstWhere('is_primary', true) ?? $product->images->first();
                     $categoryText = trim(($product->category?->name ?? 'Category').' / '.($product->subcategory?->name ?? 'Collection'));
+                    $isWishlisted = in_array($product->id, $wishlistProductIds ?? [], true);
                 @endphp
                 <article class="group overflow-hidden rounded-3xl bg-white shadow-xl shadow-slate-200/50 transition-all duration-300 hover:scale-[1.02]">
                     <div class="relative aspect-square overflow-hidden bg-slate-50">
@@ -25,11 +26,25 @@
                         @else
                             <span class="grid h-full w-full place-items-center bg-linear-to-br from-slate-50 to-slate-100 text-[13px] font-semibold text-slate-400">No image</span>
                         @endif
-                        <button class="absolute right-3 top-3 z-3 grid h-[34px] w-[34px] place-items-center rounded-full border border-white/50 bg-white/90 text-slate-700 shadow-lg backdrop-blur transition-all hover:bg-white" type="button" aria-label="Add {{ $product->name }} to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.9" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-6.716-4.35-9.193-8.151C.7 9.785 2.04 6 5.88 6c2.033 0 3.13 1.18 4.12 2.55C10.99 7.18 12.087 6 14.12 6c3.84 0 5.18 3.785 3.073 6.849C18.716 16.65 12 21 12 21z" />
-                            </svg>
-                        </button>
+                        <form
+                            class="absolute right-3 top-3 z-3"
+                            method="POST"
+                            action="{{ $isWishlisted ? route('client.wishlist.destroy', $product) : route('client.wishlist.store', $product) }}"
+                        >
+                            @csrf
+                            @if ($isWishlisted)
+                                @method('DELETE')
+                            @endif
+                            <button
+                                class="grid h-[34px] w-[34px] place-items-center rounded-full border border-white/50 bg-white/90 text-[#f16743] shadow-lg backdrop-blur transition-all hover:bg-white"
+                                type="submit"
+                                aria-label="{{ $isWishlisted ? 'Remove '.$product->name.' from wishlist' : 'Add '.$product->name.' to wishlist' }}"
+                            >
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="{{ $isWishlisted ? 'currentColor' : 'none' }}" viewBox="0 0 24 24" stroke-width="1.9" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+</svg>
+                            </button>
+                        </form>
                         <a href="{{ route('client.products.show', $product) }}" class="absolute right-[52px] top-3 z-3 grid h-[34px] w-[34px] -translate-y-1 place-items-center rounded-full border border-white/50 bg-white/90 text-slate-700 opacity-0 shadow-lg backdrop-blur transition group-hover:translate-y-0 group-hover:opacity-100" aria-label="View details for {{ $product->name }}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />

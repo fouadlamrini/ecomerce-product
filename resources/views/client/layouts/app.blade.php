@@ -30,6 +30,14 @@
                         <path d="M3 5a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     </svg>
                 </a>
+                <a href="{{ route('client.wishlist.index') }}" class="relative inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 p-3 text-slate-700 transition-colors hover:bg-slate-100" title="Wishlist" aria-label="Wishlist">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.9" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"></path>
+                    </svg>
+                    @if (($wishlistCount ?? 0) > 0)
+                        <span class="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-[#FF7F50] px-1.5 text-center text-[11px] font-bold leading-[18px] text-white">{{ $wishlistCount }}</span>
+                    @endif
+                </a>
                 <button type="button" class="cart-wrap relative inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 p-3 text-slate-700 transition-colors hover:bg-slate-100" id="cartDrawerOpen" title="{{ __('Cart') }} ({{ $cartCount }})" aria-label="{{ __('Open shopping cart') }}" aria-expanded="false" aria-controls="cartDrawer">
                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M6 6h15l-1.5 9h-12z" />

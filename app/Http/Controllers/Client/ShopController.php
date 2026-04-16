@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Subcategory;
+use App\Models\Wishlist;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -56,10 +57,16 @@ class ShopController extends Controller
             ->where('is_active', true)
             ->with(['images', 'category', 'subcategory'])
             ->paginate(12);
+        $wishlistProductIds = Wishlist::query()
+            ->where('user_id', $request->user()->id)
+            ->whereIn('product_id', $products->pluck('id')->all())
+            ->pluck('product_id')
+            ->all();
 
         return view('client.products.index', [
             'title' => 'Products - '.$category->name,
             'products' => $products,
+            'wishlistProductIds' => $wishlistProductIds,
         ]);
     }
 
@@ -70,10 +77,16 @@ class ShopController extends Controller
             ->where('is_active', true)
             ->with(['images', 'category', 'subcategory'])
             ->paginate(12);
+        $wishlistProductIds = Wishlist::query()
+            ->where('user_id', $request->user()->id)
+            ->whereIn('product_id', $products->pluck('id')->all())
+            ->pluck('product_id')
+            ->all();
 
         return view('client.products.index', [
             'title' => 'Products - '.$subcategory->name,
             'products' => $products,
+            'wishlistProductIds' => $wishlistProductIds,
         ]);
     }
 
@@ -92,6 +105,10 @@ class ShopController extends Controller
         return view('client.products.show', [
             'product' => $product,
             'galleryImages' => $galleryImages,
+            'isWishlisted' => Wishlist::query()
+                ->where('user_id', $request->user()->id)
+                ->where('product_id', $product->id)
+                ->exists(),
         ]);
     }
 

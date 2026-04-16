@@ -30,9 +30,9 @@
             <div class="mb-3.5 text-4xl font-black tracking-tight text-[#f16743] sm:text-5xl">MAD {{ number_format((float) $product->price, 2) }}</div>
             <div class="mb-5.5 text-[15px] leading-7 text-slate-600">{{ $product->description ?: 'No description available.' }}</div>
             @php $stock = (int) $product->stock; @endphp
-            <form method="POST" action="{{ route('client.products.add-to-cart', $product) }}">
-                @csrf
-                <div class="grid grid-cols-1 items-center gap-2.5 sm:grid-cols-[124px_1fr_48px]">
+            <div class="grid grid-cols-1 items-center gap-2.5 sm:grid-cols-[124px_1fr_48px]">
+                <form method="POST" action="{{ route('client.products.add-to-cart', $product) }}" class="contents">
+                    @csrf
                     <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-1" aria-label="Quantity selector">
                         <button type="button" id="qtyMinus" class="h-[34px] w-[34px] rounded-lg bg-slate-100 text-lg font-bold text-slate-900 disabled:cursor-not-allowed disabled:opacity-45" aria-label="Decrease quantity" {{ $stock < 1 ? 'disabled' : '' }}>-</button>
                         <span class="min-w-6 text-center text-[15px] font-extrabold text-slate-900" id="qtyValue">1</span>
@@ -40,13 +40,23 @@
                     </div>
                     <input type="hidden" name="quantity" id="qtyInput" value="1">
                     <button class="rounded-2xl bg-linear-to-b from-[#ff996f] via-[#ff7f50] to-[#f16743] px-4 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-[#f16743]/25 disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none" type="submit" {{ $stock < 1 ? 'disabled' : '' }}>{{ $stock < 1 ? 'Out of stock' : 'Add to cart' }}</button>
-                    <button class="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#f16743] sm:w-12" type="button" aria-label="Add to wishlist">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.9" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-6.716-4.35-9.193-8.151C.7 9.785 2.04 6 5.88 6c2.033 0 3.13 1.18 4.12 2.55C10.99 7.18 12.087 6 14.12 6c3.84 0 5.18 3.785 3.073 6.849C18.716 16.65 12 21 12 21z" />
-                        </svg>
+                </form>
+                <form
+                    method="POST"
+                    action="{{ $isWishlisted ? route('client.wishlist.destroy', $product) : route('client.wishlist.store', $product) }}"
+                    class="sm:w-12"
+                >
+                    @csrf
+                    @if ($isWishlisted)
+                        @method('DELETE')
+                    @endif
+                    <button class="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#f16743]" type="submit" aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="{{ $isWishlisted ? 'currentColor' : 'none' }}" viewBox="0 0 24 24" stroke-width="1.9" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+</svg>
                     </button>
-                </div>
-            </form>
+                </form>
+            </div>
             <div class="mt-4 grid gap-2.5">
                 <div class="flex items-center gap-2.5 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 text-[13px] font-semibold text-slate-700">
                     <svg class="h-4 w-4 shrink-0 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">

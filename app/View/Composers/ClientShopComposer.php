@@ -3,6 +3,7 @@
 namespace App\View\Composers;
 
 use App\Models\Cart;
+use App\Models\Wishlist;
 use Illuminate\View\View;
 
 class ClientShopComposer
@@ -15,6 +16,7 @@ class ClientShopComposer
                 'cartCount' => 0,
                 'cartDrawerItems' => collect(),
                 'cartDrawerSubtotal' => 0.0,
+                'wishlistCount' => 0,
             ]);
 
             return;
@@ -30,6 +32,7 @@ class ClientShopComposer
                 'cartCount' => 0,
                 'cartDrawerItems' => collect(),
                 'cartDrawerSubtotal' => 0.0,
+                'wishlistCount' => (int) Wishlist::query()->where('user_id', $user->id)->count(),
             ]);
 
             return;
@@ -42,6 +45,7 @@ class ClientShopComposer
             'cartCount' => (int) $items->sum('quantity'),
             'cartDrawerItems' => $items,
             'cartDrawerSubtotal' => (float) $subtotal,
+            'wishlistCount' => (int) Wishlist::query()->where('user_id', $user->id)->count(),
         ]);
     }
 }

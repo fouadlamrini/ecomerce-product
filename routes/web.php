@@ -7,6 +7,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Client\AddressController as ClientAddressController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ShopController;
+use App\Http\Controllers\Client\WishlistController as ClientWishlistController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -58,6 +59,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/subcategories/{subcategory}', [ShopController::class, 'showSubcategory'])->name('subcategories.show');
         Route::get('/products/{product}', [ShopController::class, 'showProduct'])->name('products.show');
         Route::post('/products/{product}/add-to-cart', [ShopController::class, 'addToCart'])->name('products.add-to-cart');
+        Route::get('/wishlist', [ClientWishlistController::class, 'index'])->name('wishlist.index');
+        Route::post('/wishlist/{product}', [ClientWishlistController::class, 'store'])->name('wishlist.store');
+        Route::delete('/wishlist/{product}', [ClientWishlistController::class, 'destroy'])->name('wishlist.destroy');
 
         Route::get('/cart', fn () => redirect()->route('client.categories.index'))->name('cart.index');
         Route::post('/cart/items/{cartItem}/increment', [CartController::class, 'increment'])->name('cart.items.increment');

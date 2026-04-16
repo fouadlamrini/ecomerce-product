@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
             'client.subcategories.index',
             'client.products.index',
             'client.products.show',
+            'client.wishlist.index',
             'client.checkout.show',
             'client.profile.index',
         ], ClientShopComposer::class);
