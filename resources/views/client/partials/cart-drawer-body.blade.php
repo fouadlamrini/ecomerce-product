@@ -1,6 +1,6 @@
 @if ($cartDrawerItems->isEmpty())
     <div class="px-3 pb-8 pt-12 text-center">
-        <div class="mx-auto mb-5 flex h-[120px] w-[120px] items-center justify-center rounded-full bg-blue-50 text-blue-300" aria-hidden="true">
+        <div class="mx-auto mb-5 flex h-[120px] w-[120px] items-center justify-center rounded-full bg-orange-50 text-orange-300" aria-hidden="true">
             <svg class="h-14 w-14" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 6h15l-1.5 9h-12z" />
                 <circle cx="9" cy="19" r="1.25" fill="currentColor" stroke="none" />
@@ -10,7 +10,7 @@
         </div>
         <p class="mb-2 text-lg font-extrabold text-slate-900">Cart Empty</p>
         <p class="mx-auto mb-5 max-w-[260px] text-sm leading-6 text-slate-400">Discover our products and start your order.</p>
-        <a href="{{ route('client.categories.index') }}" class="inline-block rounded-lg bg-blue-600 px-4.5 py-2.5 text-sm font-bold text-white hover:bg-blue-700">Continue shopping</a>
+        <a href="{{ route('client.categories.index') }}" class="inline-block rounded-xl bg-[#FF7F50] px-4.5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-[#E66D43] active:scale-95">Continue shopping</a>
     </div>
 @else
     <div class="min-h-0 flex-1 overflow-y-auto">
@@ -23,7 +23,7 @@
                     $atMax = $item->quantity >= $stock;
                 @endphp
                 <li class="grid grid-cols-[52px_1fr_auto] items-start gap-2.5 border-b border-slate-100 py-3.5">
-                    <div class="h-[52px] w-[52px] overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                    <div class="h-[52px] w-[52px] overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
                         @if ($img)
                             <img class="block h-full w-full object-cover" src="{{ asset('storage/'.$img->path) }}" alt="">
                         @else
@@ -34,9 +34,9 @@
                         <p class="mb-1 text-sm font-bold leading-5 text-slate-900">{{ $product->name }}</p>
                         <p class="mb-2 text-xs text-slate-500">{{ number_format((float) $item->unit_price, 2) }} each · max {{ $stock }}</p>
                         <div class="inline-flex items-center gap-1">
-                            <button type="button" class="h-[30px] w-[30px] rounded-md border border-slate-200 bg-white p-0 text-base text-slate-900 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" data-cart-ajax="decrement" data-cart-url="{{ route('client.cart.items.decrement', $item) }}" aria-label="Decrease">&minus;</button>
+                            <button type="button" class="h-[30px] w-[30px] rounded-lg border border-slate-200 bg-white p-0 text-base text-slate-900 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" data-cart-ajax="decrement" data-cart-url="{{ route('client.cart.items.decrement', $item) }}" aria-label="Decrease">&minus;</button>
                             <span class="min-w-[22px] text-center text-sm font-bold">{{ $item->quantity }}</span>
-                            <button type="button" class="h-[30px] w-[30px] rounded-md border border-slate-200 bg-white p-0 text-base text-slate-900 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" data-cart-ajax="increment" data-cart-url="{{ route('client.cart.items.increment', $item) }}" @if ($atMax) disabled title="Maximum stock reached" @endif aria-label="Increase">&plus;</button>
+                            <button type="button" class="h-[30px] w-[30px] rounded-lg border border-slate-200 bg-white p-0 text-base text-slate-900 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" data-cart-ajax="increment" data-cart-url="{{ route('client.cart.items.increment', $item) }}" @if ($atMax) disabled title="Maximum stock reached" @endif aria-label="Increase">&plus;</button>
                         </div>
                     </div>
                     <div class="whitespace-nowrap text-right text-sm font-extrabold">
@@ -55,8 +55,8 @@
             <strong class="text-lg">{{ number_format($cartDrawerSubtotal, 2) }}</strong>
         </div>
         <div class="flex flex-col gap-2">
-            <a href="{{ route('client.categories.index') }}" class="block rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-center text-sm font-bold text-slate-700 hover:bg-slate-50">Continue shopping</a>
-            <a href="{{ route('client.checkout') }}" class="block rounded-lg bg-[#f16743] px-3.5 py-3 text-center text-sm font-bold text-white hover:brightness-95">Checkout</a>
+            <a href="{{ route('client.categories.index') }}" class="block rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-center text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50">Continue shopping</a>
+            <a href="{{ route('client.checkout') }}" class="block rounded-xl bg-[#FF7F50] px-3.5 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-[#E66D43] active:scale-95">Checkout</a>
         </div>
     </div>
 @endif

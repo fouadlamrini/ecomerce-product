@@ -12,35 +12,44 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 </head>
-<body class="m-0 bg-slate-50 text-slate-900" style="font-family: Inter, Arial, sans-serif;">
+<body class="m-0 bg-[#f8fafc] font-sans text-slate-900" style="font-family: Inter, Geist, Arial, sans-serif;">
     @php
         $cartCount = $cartCount ?? 0;
         $cartDrawerItems = $cartDrawerItems ?? collect();
         $cartDrawerSubtotal = $cartDrawerSubtotal ?? 0.0;
         $currentUser = auth()->user();
     @endphp
-    <header class="sticky top-0 z-50 border-b border-white/30 bg-white/70 backdrop-blur">
+    <header class="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-lg">
         <div class="mx-auto flex max-w-[1240px] items-center justify-between px-4 py-3.5">
-            <a href="{{ route('client.categories.index') }}" class="text-2xl font-black uppercase tracking-[0.08em] text-slate-900">Nexus</a>
+            <a href="{{ route('client.categories.index') }}" class="inline-flex items-center gap-2 text-2xl font-extrabold tracking-tight text-slate-900">
+                <span class="text-[#FF7F50]">Nexus</span>
+            </a>
             <div class="flex items-center gap-2.5">
-                <a href="{{ route('client.categories.index') }}" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Categories</a>
-                <button type="button" class="cart-wrap relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/90 text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" id="cartDrawerOpen" title="{{ __('Cart') }} ({{ $cartCount }})" aria-label="{{ __('Open shopping cart') }}" aria-expanded="false" aria-controls="cartDrawer">
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <a href="{{ route('client.categories.index') }}" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-xl shadow-slate-200/50 transition-all hover:bg-slate-50">
+                    <svg class="h-4 w-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                        <path d="M3 5a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                    <span class="hidden sm:inline">Categories</span>
+                </a>
+                <button type="button" class="cart-wrap relative inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-xl shadow-slate-200/50 transition-all hover:bg-slate-50" id="cartDrawerOpen" title="{{ __('Cart') }} ({{ $cartCount }})" aria-label="{{ __('Open shopping cart') }}" aria-expanded="false" aria-controls="cartDrawer">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M6 6h15l-1.5 9h-12z" />
                         <circle cx="9" cy="19" r="1.25" fill="currentColor" stroke="none" />
                         <circle cx="17" cy="19" r="1.25" fill="currentColor" stroke="none" />
                         <path d="M6 6 5 3H2" />
                     </svg>
-                    <span class="cart-badge absolute -right-1 -top-1 min-w-[18px] rounded-full bg-[#f16743] px-1.5 text-center text-[11px] font-bold leading-[18px] text-white">{{ $cartCount }}</span>
+                    <span class="hidden sm:inline">Cart</span>
+                    <span class="cart-badge absolute -right-1 -top-1 min-w-[18px] rounded-full bg-[#FF7F50] px-1.5 text-center text-[11px] font-bold leading-[18px] text-white">{{ $cartCount }}</span>
                 </button>
                 <div class="relative">
-                    <button type="button" id="userMenuButton" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/90 text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" aria-haspopup="true" aria-expanded="false" aria-controls="userDropdown" title="Open profile menu">
-                        <svg class="h-[18px] w-[18px]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.85" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <button type="button" id="userMenuButton" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-xl shadow-slate-200/50 transition-all hover:bg-slate-50" aria-haspopup="true" aria-expanded="false" aria-controls="userDropdown" title="Open profile menu">
+                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.85" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M20 21a8 8 0 0 0-16 0" />
                             <circle cx="12" cy="8" r="4" />
                         </svg>
+                        <span class="hidden sm:inline">Profile</span>
                     </button>
-                    <div class="hidden absolute right-0 top-[calc(100%+10px)] w-[210px] rounded-xl border border-slate-200 bg-white p-2 shadow-xl" id="userDropdown" role="menu">
+                    <div class="hidden absolute right-0 top-[calc(100%+10px)] w-[220px] rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-200/60" id="userDropdown" role="menu">
                         <div class="mb-1.5 border-b border-slate-100 px-2.5 pb-2.5 pt-2">
                             <p class="truncate text-[13px] font-bold text-slate-900">{{ $currentUser?->name ?? 'Client' }}</p>
                             <p class="mt-0.5 text-xs text-slate-500">Account</p>
@@ -58,15 +67,15 @@
     </header>
 
     <main class="mx-auto my-7 max-w-[1240px] px-4">
-        <div id="cartAjaxError" class="hidden mb-3.5 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-900" role="status"></div>
+        <div id="cartAjaxError" class="hidden mb-3.5 rounded-2xl border border-red-100 bg-red-50 px-3.5 py-3 text-sm text-red-900 shadow-xl shadow-red-100/40" role="status"></div>
         @if (session('success'))
-            <div class="mb-3.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800">{{ session('success') }}</div>
+            <div class="mb-3.5 rounded-2xl border border-emerald-100 bg-emerald-50 px-3.5 py-3 text-sm text-emerald-800 shadow-xl shadow-emerald-100/40">{{ session('success') }}</div>
         @endif
         @if (session('error'))
-            <div class="mb-3.5 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-900">{{ session('error') }}</div>
+            <div class="mb-3.5 rounded-2xl border border-red-100 bg-red-50 px-3.5 py-3 text-sm text-red-900 shadow-xl shadow-red-100/40">{{ session('error') }}</div>
         @endif
         @if ($errors->any())
-            <div class="mb-3.5 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2.5 text-sm text-orange-800">
+            <div class="mb-3.5 rounded-2xl border border-orange-100 bg-orange-50 px-3.5 py-3 text-sm text-orange-800 shadow-xl shadow-orange-100/40">
                 <ul class="list-disc pl-5">
                     @foreach ($errors->all() as $message)
                         <li>{{ $message }}</li>

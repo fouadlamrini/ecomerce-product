@@ -11,7 +11,7 @@
         </p>
     </section>
 
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         @forelse ($categories as $category)
             @php
                 $cover = $category->bg_image ?: optional($category->products->first()?->images->first())->path;
@@ -21,20 +21,20 @@
                 $meta = $hasSubs
                     ? ($subCount > 0 ? $subCount.' subcategories' : 'Explore collection')
                     : ($productsCount > 0 ? $productsCount.' products' : 'Explore collection');
-                $featured = $loop->index < 2;
-                $cardBase = 'group relative isolate flex aspect-square items-end overflow-hidden rounded-3xl border border-white/10 text-white shadow-xl transition hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl';
-                $featuredClass = $featured ? 'sm:col-span-2 sm:aspect-[2/1] xl:col-span-2 xl:aspect-[2/1]' : '';
-                $bgFallback = $cover ? '' : 'bg-linear-to-br from-slate-900 to-slate-800';
+                $featuredClass = $loop->index === 0
+                    ? 'sm:col-span-2 sm:row-span-2 sm:aspect-[2/1.35] xl:col-span-2'
+                    : ($loop->index === 3 ? 'sm:col-span-2 xl:col-span-2' : '');
+                $cardBase = 'group relative isolate flex aspect-square items-end overflow-hidden rounded-3xl bg-slate-50 shadow-xl shadow-slate-200/50 transition-all duration-300 hover:scale-[1.02]';
             @endphp
-            <a href="{{ route('client.categories.show', $category) }}" class="{{ $cardBase }} {{ $featuredClass }} {{ $bgFallback }}">
+            <a href="{{ route('client.categories.show', $category) }}" class="{{ $cardBase }} {{ $featuredClass }}">
                 @if ($cover)
-                    <img class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-110" src="{{ asset('storage/'.$cover) }}" alt="{{ $category->name }}">
+                    <img class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" src="{{ asset('storage/'.$cover) }}" alt="{{ $category->name }}">
+                @else
+                    <div class="absolute inset-0 bg-linear-to-br from-slate-100 to-slate-200"></div>
                 @endif
-                <div class="absolute inset-0 z-1 bg-linear-to-b from-black/10 via-black/20 to-black/60"></div>
-                <div class="pointer-events-none absolute inset-[-120%_-40%] z-2 rotate-12 bg-linear-to-r from-transparent via-white/20 to-transparent transition duration-700 group-hover:translate-x-[78%]"></div>
-                <div class="relative z-3 p-5">
-                    <h2 class="m-0 text-3xl font-extrabold capitalize leading-tight tracking-tight sm:text-4xl">{{ $category->name }}</h2>
-                    <div class="mt-2 text-sm font-medium text-white/90">{{ $meta }}</div>
+                <div class="relative z-10 m-4 w-[calc(100%-2rem)] rounded-2xl border border-white/60 bg-white/70 p-4 backdrop-blur-md">
+                    <h2 class="m-0 text-2xl font-extrabold capitalize leading-tight tracking-tight text-slate-900 sm:text-3xl">{{ $category->name }}</h2>
+                    <div class="mt-1.5 text-sm font-medium text-slate-600">{{ $meta }}</div>
                 </div>
             </a>
         @empty
