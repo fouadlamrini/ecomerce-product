@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Client\AddressController as ClientAddressController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ShopController;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShippingController;
@@ -32,8 +33,7 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('admin.dashboard');
         })->name('home');
 
-        Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
-        Route::view('/analytics', 'admin.analytics')->name('analytics');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::view('/orders', 'admin.orders')->name('orders');
         Route::view('/promotions', 'admin.promotions')->name('promotions');
         Route::resource('products', ProductController::class);
