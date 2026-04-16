@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Client\Concerns\InteractsWithCart;
 use App\Http\Controllers\Controller;
 use App\Models\CartItem;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\StripeCheckoutService;
@@ -127,6 +128,7 @@ class CartController extends Controller
                     fn ($query) => $query->where('user_id', $user->id)
                 ),
             ],
+            'coupon_code' => ['nullable', 'string', 'max:50'],
         ]);
 
         $order = DB::transaction(function () use ($request, $user, $validated): Order {
@@ -164,15 +166,68 @@ class CartController extends Controller
                 fn (CartItem $item): float => $item->quantity * (float) $item->unit_price
             );
 
+            $coupon = null;
+            $discountAmount = 0.0;
+            $couponCode = strtoupper(trim((string) ($validated['coupon_code'] ?? '')));
+            if ($couponCode !== '') {
+                $coupon = Coupon::query()
+                    ->lockForUpdate()
+                    ->whereRaw('UPPER(code) = ?', [$couponCode])
+                    ->first();
+
+                if (! $coupon) {
+                    throw ValidationException::withMessages([
+                        'coupon_code' => 'Promo code is invalid.',
+                    ]);
+                }
+
+                if (! $coupon->is_active) {
+                    throw ValidationException::withMessages([
+                        'coupon_code' => 'This promo code is not active.',
+                    ]);
+                }
+
+                $now = now();
+                if ($coupon->starts_at && $coupon->starts_at->gt($now)) {
+                    throw ValidationException::withMessages([
+                        'coupon_code' => 'This promo code is not active yet.',
+                    ]);
+                }
+                if ($coupon->expires_at && $coupon->expires_at->lt($now)) {
+                    throw ValidationException::withMessages([
+                        'coupon_code' => 'This promo code has expired.',
+                    ]);
+                }
+                if ($coupon->usage_limit !== null && $coupon->used_count >= $coupon->usage_limit) {
+                    throw ValidationException::withMessages([
+                        'coupon_code' => 'This promo code has reached its usage limit.',
+                    ]);
+                }
+                if ($coupon->min_order_amount !== null && $subtotal < (float) $coupon->min_order_amount) {
+                    throw ValidationException::withMessages([
+                        'coupon_code' => 'Minimum order amount for this code is '.number_format((float) $coupon->min_order_amount, 2).'.',
+                    ]);
+                }
+
+                if ($coupon->type === 'percentage') {
+                    $discountAmount = round($subtotal * ((float) $coupon->value / 100), 2);
+                } else {
+                    $discountAmount = min((float) $coupon->value, $subtotal);
+                }
+            }
+
+            $total = max(0, round($subtotal - $discountAmount, 2));
+
             $order = Order::query()->create([
                 'user_id' => $user->id,
                 'address_id' => $validated['address_id'],
+                'coupon_id' => $coupon?->id,
                 'order_number' => $this->generateOrderNumber(),
                 'status' => 'pending',
                 'subtotal' => $subtotal,
-                'discount_amount' => 0,
+                'discount_amount' => $discountAmount,
                 'shipping_amount' => 0,
-                'total' => $subtotal,
+                'total' => $total,
                 'payment_status' => 'UNPAID',
             ]);
 
@@ -186,6 +241,10 @@ class CartController extends Controller
                 ]);
 
                 $lockedProducts->get($item->product_id)?->decrement('stock', (int) $item->quantity);
+            }
+
+            if ($coupon) {
+                $coupon->increment('used_count');
             }
 
             $cart->items()->delete();

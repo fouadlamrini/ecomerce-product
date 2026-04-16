@@ -204,6 +204,17 @@
                     @endforeach
                 </select>
 
+                <label class="mb-1.5 mt-3.5 block text-sm font-semibold text-slate-700" for="coupon_code">Promo code (optional)</label>
+                <input
+                    id="coupon_code"
+                    type="text"
+                    name="coupon_code"
+                    value="{{ old('coupon_code') }}"
+                    placeholder="e.g. WELCOME10"
+                    class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm uppercase"
+                >
+                <p class="mt-1 text-xs text-slate-500">If valid, discount will be applied automatically to this order.</p>
+
                 @if ($addresses->isEmpty())
                     <p class="mt-2 text-sm text-slate-500">Add an address before placing your order.</p>
                 @endif

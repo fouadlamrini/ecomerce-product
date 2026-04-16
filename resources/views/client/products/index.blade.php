@@ -45,8 +45,8 @@
                             <form method="POST" action="{{ route('client.products.add-to-cart', $product) }}">
                                 @csrf
                                 <button
-                                    class="w-full rounded-xl bg-orange-500 px-3 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-orange-600 active:scale-95"
-                                    style="display:block;background-color:#f97316;color:#ffffff;"
+                                    class="w-full rounded-xl border border-orange-500 bg-orange-500 px-3 py-2.5 text-sm font-semibold text-slate-900 shadow-lg shadow-orange-500/20 transition-all hover:bg-orange-600 active:scale-95"
+                                    style="display:block;background-color:#f97316 !important;color:#ffffff !important;border-color:#f97316 !important;"
                                     type="submit"
                                 >
                                     Add to cart
