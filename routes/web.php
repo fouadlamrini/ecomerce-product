@@ -25,8 +25,10 @@ Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/client/orders/{order}/checkout', [OrderController::class, 'checkout'])->name('orders.checkout');
-    Route::get('/payment/success', [OrderController::class, 'success'])->name('payment.success');
+    Route::middleware('client')->group(function () {
+        Route::post('/client/orders/{order}/checkout', [OrderController::class, 'checkout'])->name('orders.checkout');
+        Route::get('/payment/success', [OrderController::class, 'success'])->name('payment.success');
+    });
 
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/home', function () {
@@ -42,7 +44,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('shippings', ShippingController::class);
     });
 
-    Route::prefix('client')->name('client.')->group(function () {
+    Route::middleware('client')->prefix('client')->name('client.')->group(function () {
         Route::get('/home', [ShopController::class, 'home'])->name('home');
         Route::get('/profile', [ClientAddressController::class, 'index'])->name('profile');
         Route::post('/addresses', [ClientAddressController::class, 'store'])->name('addresses.store');
