@@ -57,7 +57,13 @@
                             <label class="mb-1.5 block text-xs font-bold text-slate-500" for="password_confirmation">Confirm password</label>
                             <input id="password_confirmation" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10" type="password" name="password_confirmation" placeholder="••••••••" required>
                         </div>
-                        <button class="w-full rounded-xl bg-[#FF7F50] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-[#E66D43] active:scale-95" type="submit">Sign Up</button>
+                        <button
+                            class="w-full rounded-xl bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-orange-600 active:scale-95"
+                            style="display:block;background-color:#f97316;color:#ffffff;"
+                            type="submit"
+                        >
+                            Sign Up
+                        </button>
                     </form>
 
                     <p class="mt-3.5 text-[13px] text-slate-600">

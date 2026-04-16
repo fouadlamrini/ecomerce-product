@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Client\AddressController as ClientAddressController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ShopController;
@@ -37,7 +38,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::view('/orders', 'admin.orders')->name('orders');
-        Route::view('/promotions', 'admin.promotions')->name('promotions');
+        Route::get('/promotions', [CouponController::class, 'index'])->name('promotions');
+        Route::post('/promotions', [CouponController::class, 'store'])->name('promotions.store');
+        Route::put('/promotions/{coupon}', [CouponController::class, 'update'])->name('promotions.update');
+        Route::delete('/promotions/{coupon}', [CouponController::class, 'destroy'])->name('promotions.destroy');
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('subcategories', SubcategoryController::class);

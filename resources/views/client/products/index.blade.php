@@ -41,10 +41,16 @@
                         <span class="inline-flex max-w-full items-center rounded-2xl border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-bold uppercase leading-none tracking-[0.04em] text-slate-500">{{ $categoryText }}</span>
                         <h3 class="mb-1.5 mt-2.5 text-[21px] font-extrabold leading-7 text-slate-900">{{ $product->name }}</h3>
                         <div class="mb-2.5 text-[21px] font-black text-[#FF7F50]">MAD {{ number_format((float) $product->price, 2) }}</div>
-                        <div class="max-h-0 translate-y-2 overflow-hidden opacity-0 transition group-hover:max-h-20 group-hover:translate-y-0 group-hover:opacity-100">
+                        <div class="mt-2.5">
                             <form method="POST" action="{{ route('client.products.add-to-cart', $product) }}">
                                 @csrf
-                                <button class="w-full rounded-xl bg-[#FF7F50] px-3 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-[#E66D43] active:scale-95" type="submit">Add to cart</button>
+                                <button
+                                    class="w-full rounded-xl bg-orange-500 px-3 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-orange-600 active:scale-95"
+                                    style="display:block;background-color:#f97316;color:#ffffff;"
+                                    type="submit"
+                                >
+                                    Add to cart
+                                </button>
                             </form>
                         </div>
                     </div>

@@ -49,14 +49,20 @@
             @endforeach
         </ul>
     </div>
-    <div class="mt-2 border-t border-slate-100 pt-4">
+    <div class="sticky bottom-0 mt-2 border-t border-slate-100 bg-white pt-4">
         <div class="mb-3 flex items-center justify-between text-[15px]">
             <span>Subtotal</span>
             <strong class="text-lg">{{ number_format($cartDrawerSubtotal, 2) }}</strong>
         </div>
         <div class="flex flex-col gap-2">
             <a href="{{ route('client.categories.index') }}" class="block rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-center text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50">Continue shopping</a>
-            <a href="{{ route('client.checkout') }}" class="block rounded-xl bg-[#FF7F50] px-3.5 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-[#E66D43] active:scale-95">Checkout</a>
+            <a
+                href="{{ route('client.checkout') }}"
+                class="block rounded-xl bg-orange-500 px-3.5 py-3 text-center text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-orange-600 active:scale-95"
+                style="display:block;background-color:#f97316;color:#ffffff;"
+            >
+                Checkout
+            </a>
         </div>
     </div>
 @endif

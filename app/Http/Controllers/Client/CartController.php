@@ -204,7 +204,7 @@ class CartController extends Controller
     {
         $this->ensureOwnedOrder($request, $order);
 
-        $order->load(['items.product.images', 'address']);
+        $order->load(['items.product.images', 'address', 'shipping']);
 
         return view('client.orders.show', [
             'order' => $order,

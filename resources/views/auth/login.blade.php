@@ -49,7 +49,13 @@
                             <label class="mb-1.5 block text-xs font-bold text-slate-500" for="password">Password</label>
                             <input id="password" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10" type="password" name="password" placeholder="••••••••" required>
                         </div>
-                        <button class="w-full rounded-xl bg-[#FF7F50] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-[#E66D43] active:scale-95" type="submit">Sign In</button>
+                        <button
+                            class="w-full rounded-xl bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-orange-600 active:scale-95"
+                            style="display:block;background-color:#f97316;color:#ffffff;"
+                            type="submit"
+                        >
+                            Sign In
+                        </button>
                     </form>
 
                     <p class="mt-4 text-[13px] text-slate-600">I don't have an account? <a class="font-semibold text-[#FF7F50]" href="{{ route('register') }}">Sign up</a></p>
