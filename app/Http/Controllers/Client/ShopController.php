@@ -22,7 +22,7 @@ class ShopController extends Controller
     public function categories(Request $request): View
     {
         $categories = Category::query()
-            ->where('is_active', true)
+            ->whereRaw('COALESCE(is_active, 0) <> 0')
             ->with([
                 'subcategories' => fn ($query) => $query->where('is_active', true),
                 'products.images',

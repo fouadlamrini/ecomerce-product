@@ -4,15 +4,6 @@
 
 @section('content')
     <h1 class="mb-2 text-[26px] font-extrabold">Checkout</h1>
-    @if ($errors->any())
-        <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
-            <ul class="list-disc pl-5">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_340px]">
         <div class="rounded-xl border border-slate-200 bg-white p-4.5">
